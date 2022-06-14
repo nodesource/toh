@@ -13,10 +13,9 @@ RUN npm install --force
 # Bundle app source
 COPY . .
 # Build app from source
-RUN npm run build -- --configuration=development
+RUN npm run build -- --configuration=production
 
 # Stage 2
-
 FROM nginx:alpine
 COPY --from=build /usr/src/app/dist /usr/share/nginx/html
 EXPOSE 80
