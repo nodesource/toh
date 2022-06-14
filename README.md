@@ -5,3 +5,37 @@ it will need a back-end for this one, ofr the back-end run `npm run dev:server`
 
 For production env, build the ng app with `npm run build -- --configuration=production`
 and then `npm run prod:server` to run the Node.js API in prod
+
+### How to setup and migrate the pg db for the first time:
+
+First, start up the Postgresql instance using docker (change what is needed):
+
+```sh
+$ docker run \
+    --name REPLACEME \
+    -p 5455:5432 \
+    -e POSTGRES_USER=nsolid \
+    -e POSTGRES_PASSWORD=nsolid \
+    -e POSTGRES_DB=heroes \
+    -d postgres
+```
+
+**NOTE: Using docker is not required here, any pg server could work**
+
+Once the pg instance is up and running, simply run:
+
+```sh
+$ PGUSER=nsolid PGHOST=localhost PGPORT=5432 node db-setup.js ```
+```
+
+For a different configuration, `db-setup.js` supports different env vars:
+
+```sh
+PGUSER=nsolid # by default
+PGHOST=localhost # by default
+PGDATABASE=nsolid # by default
+PGPASSWORD=nsolid # by default
+PGPORT=5432 # by default
+```
+
+Take a look to the `http-server/pg-tools.js` file.

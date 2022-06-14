@@ -1,7 +1,10 @@
 'use strict'
 
 const { Router } = require('express')
+const db = require('./pg-tools')
 
+// TODO
+// Get rid of this once the whole migration to pg is done!
 let heroList = [
   { id: 12, name: 'Dr. Nice' },
   { id: 13, name: 'Bombasto' },
@@ -17,11 +20,18 @@ let heroList = [
 const router = Router()
 
 // TODO
-// Implement the next endpoints
-// Use the `heroList` array as your db
+// Implement the next endpoints using postgres
+// Use this example to do the rest of the endpoints
 
 router.get('/heroes', (req, res) => {
-  res.send(heroList)
+  db.query('SELECT * FROM heroe', (err, results) => {
+    if (err) {
+      res.status(500)
+      res.send(err.message)
+    } else {
+      res.send(results)
+    }
+  })
 })
 
 router.get('/heroes/:heroId', (req, res) => {
