@@ -29,7 +29,7 @@ router.get('/heroes', (req, res) => {
       res.status(500)
       res.send(err.message)
     } else {
-      res.send(results)
+      res.send(results.rows)
     }
   })
 })
@@ -37,47 +37,56 @@ router.get('/heroes', (req, res) => {
 router.get('/heroes/:heroId', (req, res) => {
   // Should respond with the hero associated with the `heroId`
   // hint: use `req.params.heroId`
-  const foundHero = heroList.find(hero => hero.id == req.params.heroId)
-  if (foundHero) {
-    res.send(foundHero)
-  } else {
-    res.status(404)
-    res.send('Hero not found')
-  }
+  db.query(`SELECT * FROM heroes WHERE id = ${req.params.heroId}`, (err, record) => {
+    if (!err) {
+      res.json(record.rows[0])
+    } else {
+      res.status(404)
+      res.send('Hero not found')
+    }
+  })
 })
 
 router.post('/heroes', (req, res) => {
   // Should append a new hero
   // hint: use `req.body` to get the hero information
-  const { name } = req.body
-  const lastId = heroList[heroList.length - 1].id
-  const newHero = { name, id: lastId + 1 }
-  heroList.push(newHero)
-  res.status(201)
-  res.end(JSON.stringify(newHero))
+  db.query(`INSERT INTO heroes(name) VALUES('${req.body.name}')`, (err, record) => {
+    if (!err) {
+      res.status(201)
+      res.json({ id: 'Loading...', name: req.body.name })
+    } else {
+      res.status(500)
+      res.end(err.message)
+    }
+  })
 })
 
 router.delete('/heroes/:heroId', (req, res) => {
   // Should delete a hero associated with `heroId`
   // hint: use `req.params.heroId`
-  const newHeroList = heroList.filter(hero => hero.id == req.params.heroId)
-  heroList = newHeroList
-  res.status(204)
-  res.end()
+  db.query(`DELETE FROM heroes WHERE id = ${req.params.heroId}`, (err, record) => {
+    if (!err) {
+      res.status(204)
+      res.end()
+    } else {
+      res.status(500)
+      res.end(err.message)
+    }
+  })
 })
 
 router.put('/heroes', (req, res) => {
   // Should update a hero
   // hint: use `req.body` to get the hero information
-  const indexElement = heroList.findIndex(hero => hero.id === req.body.id)
-  if (indexElement !== -1) {
-    res.status(204)
-    heroList[indexElement] = { ...heroList[indexElement], name: req.body.name }
-    res.end()
-  } else {
-    res.status(404)
-    res.end('Hero not found')
-  }
+  db.query(`UPDATE heroes SET name = '${req.body.name}' WHERE id = ${req.body.id}`, (err, record) => {
+    if (!err) {
+      res.status(204)
+      res.end()
+    } else {
+      res.status(500)
+      res.end(err.message)
+    }
+  })
 })
 
 // TODO

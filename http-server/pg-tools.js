@@ -11,7 +11,7 @@ function query (string, callback) {
     host: process.env.PGHOST || 'localhost',
     database: process.env.PGDATABASE || 'heroes',
     password: process.env.PGPASSWORD || 'nsolid',
-    port: process.env.PGPORT || 5432,
+    port: process.env.PGPORT || 5455,
   })
 
   client.connect()

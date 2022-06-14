@@ -17,6 +17,11 @@ app.use(bodyParser.json())
 
 if (isProd) {
   app.use(require('express').static(path.join(__dirname, '..', 'dist')))
+  const webRoutes = [
+    '/dashboard',
+    '/heroes'
+  ]
+  webRoutes.forEach(route => app.get(route, (req, res) => res.sendFile(path.join(__dirname, '..', 'dist', 'index.html'))))
 }
 
 app.use('/api', heroesApiRoutes)
