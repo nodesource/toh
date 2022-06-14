@@ -13,7 +13,7 @@ RUN npm install --force
 # Bundle app source
 COPY . .
 # Build app from source
-RUN npm run build
+RUN npm run build -- --configuration=development
 
 # Stage 2
 
