@@ -24,7 +24,7 @@ const router = Router()
 // Use this example to do the rest of the endpoints
 
 router.get('/heroes', (req, res) => {
-  db.query('SELECT * FROM heroe', (err, results) => {
+  db.query('SELECT * FROM heroes', (err, results) => {
     if (err) {
       res.status(500)
       res.send(err.message)
